@@ -19,6 +19,8 @@
 
     <modules>
         <module>cms-common</module>
+        <module>cms-pojo</module>
+        <module>cms-server</module>
     </modules>
 
     <properties>

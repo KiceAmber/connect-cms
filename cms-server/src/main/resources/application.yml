@@ -1,0 +1,12 @@
+server:
+  port: 9000
+spring:
+  profiles:
+    active: dev
+  datasource:
+    druid:
+      driver-class-name: ${cms.datasource.driver-class-name}
+      password: ${cms.datasource.password}
+      username: ${cms.datasource.username}
+      url: jdbc:mysql://${cms.datasource.host}:${cms.datasource.port}/${cms.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+

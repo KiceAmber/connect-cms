@@ -9,5 +9,4 @@ public class CmsServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(CmsServerApplication.class, args);
     }
-
 }
