@@ -1,7 +1,11 @@
-软件工程 2024 届毕业设计：**基于第三方登录的CMS系统的研究和设计**
+# 1. 项目说明
 
-# 技术栈
+-   `cms-backend`：项目后端服务源代码
+-   `cms-frontend`：项目前端界面源代码
+    -   `cms-admin-system`：项目的后台管理系统
+    -   `cms-community-system`：项目的前台界面
 
-后端基于 SpringBoot + MyBatis 实现
+# 2. 项目部署步骤
 
-前端基于 Vue3 + Typescript 实现
+待续...
+
