@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-    <h1>Dashboard View</h1>
+	<el-card>当日用户访问量</el-card>
 </template>
 
 <style lang="scss" scoped></style>
