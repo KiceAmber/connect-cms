@@ -6,17 +6,16 @@ use `connect_cms`;
 -- module of administrator
 -- -----------------------
 
-create table `cms_admin`
+create table `cms_admin` -- created
 (
-    `id`         int         not null auto_increment comment '管理员ID',
-    `name`       varchar(64) not null comment '管理员名称',
-    `password`   varchar(64) not null comment '管理员登录密码',
-    `email`      varchar(64) not null comment '管理员联系邮箱',
-    `status`     tinyint     not null default 1 comment '管理员状态 0-禁用 1-启用',
-    `created_at` timestamp   not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp   not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp            default null comment '删除时间',
-    primary key (`id`)
+    `id`          int         not null auto_increment comment '管理员ID',
+    `name`        varchar(64) not null comment '管理员名称，全局唯一',
+    `password`    varchar(64) not null comment '管理员登录密码',
+    `email`       varchar(64) not null comment '管理员联系邮箱',
+    `status`      tinyint     not null default 1 comment '管理员状态 0-禁用 1-启用',
+    `create_time` timestamp   not null default CURRENT_TIMESTAMP comment '创建时间',
+    primary key (`id`),
+    unique index (`name`)
 );
 
 create table `cms_role`
