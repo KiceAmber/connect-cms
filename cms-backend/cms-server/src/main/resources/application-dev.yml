@@ -3,12 +3,9 @@ cms:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
     port: 3306
-    database: cms
+    database: connect_cms
     username: root
     password: 123456
-  redis:
-    host: localhost
-    port: 6379
 
 
 
