@@ -12,8 +12,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 /**
  * 全局异常处理器，处理项目中抛出的业务异常
  */
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
@@ -36,15 +36,15 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public Result exceptionHandler(SQLIntegrityConstraintViolationException ex) {
-        // Duplicate entry 'sss' for key 'employee.idx_username'
+        // 对创建了 unique index 的字段进行处理
         String message = ex.getMessage();
         if (message.contains("Duplicate entry")) {
             String[] str = message.split(" ");
             String username = str[2];
-            String msg = username + MessageConstant.ALREADY_EXISTS;
+            String msg = username + MessageConstant.COMMON_ALREADY_EXISTS;
             return Result.error(msg);
         } else {
-            return Result.error(MessageConstant.UNKNOWN_ERROR);
+            return Result.error(MessageConstant.COMMON_UNKNOWN_ERROR);
         }
     }
 }

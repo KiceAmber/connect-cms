@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/admin/administrator")
-@Slf4j
 @Api(tags = "管理员相关接口")
 public class AdministratorController {
 
@@ -32,9 +32,9 @@ public class AdministratorController {
     private JwtProperties jwtProperties;
 
     @PostMapping("/login")
-    @ApiOperation("员工登录")
+    @ApiOperation("管理员登录")
     public Result<AdminLoginVO> login(@RequestBody AdminLoginDTO adminLoginDTO) {
-        log.info("员工登录：{}", adminLoginDTO);
+        log.info("管理员登录：{}", adminLoginDTO);
 
         Admin admin = administratorService.login(adminLoginDTO);
 

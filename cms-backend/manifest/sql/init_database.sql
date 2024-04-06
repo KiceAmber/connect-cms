@@ -72,16 +72,15 @@ create table `cms_role_permission`
 
 create table `cms_user`
 (
-    `id`         int          not null auto_increment comment '用户ID',
-    `name`       varchar(64)  not null comment '用户名称',
-    `password`   varchar(64)  not null comment '用户密码',
-    `email`      varchar(64)  not null comment '用户邮箱',
-    `signature`  varchar(128) not null comment '用户个人签名',
-    `avatar`     varchar(128) not null comment '用户头像',
-    `created_at` timestamp    not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp    not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp             default null comment '删除时间',
-    primary key (`id`)
+    `id`          int          not null auto_increment comment '用户ID',
+    `name`        varchar(64)  not null comment '用户名称',
+    `password`    varchar(64)  not null comment '用户密码',
+    `email`       varchar(64)  not null comment '用户邮箱',
+    `signature`   varchar(128) not null comment '用户个人签名',
+    `avatar`      varchar(128) not null comment '用户头像',
+    `create_time` timestamp    not null default current_timestamp comment '创建时间',
+    primary key (`id`),
+    unique index (`name`)
 );
 
 create table `cms_article`
