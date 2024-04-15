@@ -3,10 +3,10 @@
 <template>
 	<el-menu
 		active-text-color="#ffd04b"
-		background-color="#00264B"
+		background-color="#fff"
 		class="el-menu-vertical"
 		default-active="2"
-		text-color="#fff">
+		text-color="#000">
 		<div class="cms-logo">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,6 @@
 		span {
 			margin-left: 10px;
 		}
-		border-bottom: 1px solid rgba(148, 148, 148, 0.174);
 	}
 }
 </style>
