@@ -76,6 +76,11 @@
             <artifactId>jaxb-api</artifactId>
         </dependency>
 
+        <!-- JustAuth 第三方平台授权登录-->
+        <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+        </dependency>
     </dependencies>
 
 
