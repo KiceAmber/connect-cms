@@ -6,14 +6,12 @@ use `connect_cms`;
 -- module of administrator
 -- -----------------------
 
-create table `cms_admin` -- created
+create table `cms_admin`
 (
-    `id`          int         not null auto_increment comment '管理员ID',
-    `name`        varchar(64) not null comment '管理员名称，全局唯一',
-    `password`    varchar(64) not null comment '管理员登录密码',
-    `email`       varchar(64) not null comment '管理员联系邮箱',
-    `status`      tinyint     not null default 1 comment '管理员状态 0-禁用 1-启用',
-    `create_time` timestamp   not null default CURRENT_TIMESTAMP comment '创建时间',
+    `id`       int         not null auto_increment comment '管理员ID',
+    `name`     varchar(64) not null comment '管理员名称，全局唯一',
+    `password` varchar(64) not null comment '管理员登录密码',
+    `email`    varchar(64) not null comment '管理员联系邮箱',
     primary key (`id`),
     unique index (`name`)
 );
@@ -65,79 +63,74 @@ create table `cms_role_permission`
     primary key (`id`)
 );
 
-
 -- --------------------
 -- module of community
 -- --------------------
 
 create table `cms_user`
 (
-    `id`          int          not null auto_increment comment '用户ID',
-    `name`        varchar(64)  not null comment '用户名称',
-    `password`    varchar(64)  not null comment '用户密码',
-    `email`       varchar(64)  not null comment '用户邮箱',
-    `signature`   varchar(128) not null comment '用户个人签名',
-    `avatar`      varchar(128) not null comment '用户头像',
-    `create_time` timestamp    not null default current_timestamp comment '创建时间',
+    `id`            INT          not null auto_increment comment '用户ID',
+    `name`          varchar(64)  not null comment '用户名称',
+    `password`      varchar(64)  not null comment '用户密码',
+    `avatar`        varchar(128) not null comment '用户头像',
+    `signature`     varchar(128) not null comment '用户个人签名',
+    `email`         varchar(64)  not null comment '用户邮箱',
+    `article_count` INT          NOT NULL DEFAULT 0 COMMENT '用户发布的文章数量',
+    `liked_count`   INT          NOT NULL DEFAULT 0 COMMENT '用户被点赞数量',
+    `create_time`   timestamp    not null default current_timestamp comment '用户创建时间',
     primary key (`id`),
     unique index (`name`)
 );
 
 create table `cms_article`
 (
-    `id`          int          not null auto_increment comment '文章ID',
-    `title`       varchar(64)  not null comment '文章标题',
-    `content`     text         not null comment '文章正文',
-    `image`       varchar(128) not null comment '文章图片',
-    `author_id`   int          not null comment '文章作者ID',
-    `category_id` int          not null comment '文章分类ID',
-    `status`      tinyint      not null default 0 comment '文章状态 0-草稿 1-审核中 2-发布失败 3-发布成功',
-    `created_at`  timestamp    not null default current_timestamp comment '创建时间',
-    `updated_at`  timestamp    not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at`  timestamp             default null comment '删除时间',
+    `id`            int          not null auto_increment comment '文章ID',
+    `author_id`     int          not null comment '文章作者ID',
+    `community_id`  int          not null comment '文章所在社区ID',
+    `title`         varchar(64)  not null comment '文章标题',
+    `content`       text         not null comment '文章正文',
+    `cover`         varchar(128) not null comment '文章封面',
+    `like_count`    INT          NOT NULL DEFAULT 0 COMMENT '文章点赞数量',
+    `comment_count` INT          NOT NULL DEFAULT 0 COMMENT '文章评论数量',
+    `heat`          INT          NOT NULL DEFAULT 0 COMMENT '文章热度 热度=点赞+评论+浏览量',
+    `view_count`    INT          NOT NULL DEFAULT 0 COMMENT '文章浏览量',
+    `status`        tinyint      not null default 0 comment '文章状态 0-草稿 1-审核中 2-发布失败 3-发布成功',
+    `create_time`   timestamp    not null default current_timestamp comment '发布时间',
+    `update_time`   timestamp    not null default current_timestamp on update current_timestamp comment '最后修改时间',
     primary key (`id`)
 );
 
 create table `cms_tag`
 (
-    `id`         int         not null auto_increment comment '标签ID',
-    `name`       varchar(64) not null comment '标签名称',
-    `created_at` timestamp   not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp   not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp            default null comment '删除时间',
+    `id`          int          not null auto_increment comment '标签ID',
+    `name`        varchar(64)  not null comment '标签名称',
+    `description` VARCHAR(255) NULL COMMENT '标签概述',
+    `create_time` DATETIME     NOT NULL COMMENT '标签创建时间',
     primary key (`id`)
 );
 
 create table `cms_article_tag`
 (
-    `id`         int       not null auto_increment comment '文章标签ID',
-    `article_id` int       not null comment '文章ID',
-    `tag_id`     int       not null comment '标签ID',
-    `created_at` timestamp not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp          default null comment '删除时间',
-    primary key (`id`)
+    `article_id` int not null comment '文章ID',
+    `tag_id`     int not null comment '标签ID',
+    primary key (`article_id`, `tag_id`)
 );
 
-create table `cms_category`
+create table `cms_like`
 (
-    `id`         int         not null auto_increment comment '分类ID',
-    `name`       varchar(64) not null comment '分类名称',
-    `created_at` timestamp   not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp   not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp            default null comment '删除时间',
-    primary key (`id`)
+    `user_id`    int not null comment '点赞用户',
+    `article_id` int not null comment '点赞的文章ID',
+    primary key (`user_id`, `article_id`)
 );
 
 create table `cms_comment`
 (
-    `id`         int          not null auto_increment comment '评论ID',
-    `parent_id`  int          not null default 0 comment '父评论ID, 无父评论则为 0',
-    `user_id`    int          not null comment '评论用户',
-    `content`    varchar(128) not null comment '评论内容',
-    `created_at` timestamp    not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp    not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp             default null comment '删除时间',
+    `id`           int           not null auto_increment comment '评论ID',
+    `parent_id`    int           not null default 0 comment '父评论ID, 无父评论则为 0',
+    `user_id`      int           not null comment '评论用户',
+    `article_id`   int           not null comment '评论的文章ID',
+    `content`      varchar(1024) not null comment '评论内容',
+    `comment_time` timestamp     not null default current_timestamp comment '评论时间',
     primary key (`id`)
 );
 

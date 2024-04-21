@@ -8,12 +8,10 @@ import com.amber.result.Result;
 import com.amber.service.UserService;
 import com.amber.utils.JwtUtil;
 import com.amber.vo.UserLoginVO;
+import com.amber.vo.UserRegisterVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import me.zhyd.oauth.config.AuthConfig;
-import me.zhyd.oauth.request.AuthGiteeRequest;
-import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +40,7 @@ public class UserController {
      */
     @PostMapping("/register")
     @ApiOperation("用户注册")
-    public Result<?> register(@RequestBody String name) {
+    public Result<UserRegisterVO> register(@RequestBody String name) {
         // TODO: 用户注册
         return null;
     }
@@ -78,31 +76,5 @@ public class UserController {
         return Result.success(userLoginVO);
     }
 
-    /**
-     * 第三方平台授权登录
-     *
-     * @param name
-     * @return
-     */
-    @PostMapping("/thirdLogin")
-    @ApiOperation("第三方平台授权登录")
-    public Result<?> thirdPlatformLogin(@RequestBody String name) {
-
-        // 创建授权request
-        AuthRequest authRequest = getAuthRequest();
-        // 生成授权页面
-        String authorizeUrl = authRequest.authorize("state");
-        // 授权登录后会返回code（auth_code（仅限支付宝））、state，1.8.0版本后，可以用AuthCallback类作为回调接口的参数
-        // 注：JustAuth默认保存state的时效为3分钟，3分钟内未使用则会自动清除过期的state
-        authRequest.login(callback);
-        return null;
-    }
-
-    private AuthRequest getAuthRequest() {
-        return new AuthGiteeRequest(AuthConfig.builder()
-                .clientId("ClientId")
-                .clientSecret("client Server")
-                .redirectUri("回调地址")
-                .build());
-    }
+    // TODO: 第三方平台授权登录
 }
