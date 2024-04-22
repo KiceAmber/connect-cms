@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/admin/administrator")
+@RequestMapping("/api/admin/administrator")
 @Api(tags = "管理员相关接口")
 public class AdministratorController {
 
