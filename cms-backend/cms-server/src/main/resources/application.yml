@@ -39,3 +39,7 @@ cms:
     user-secret-key: connect-cms-Qg#Yz.|S{-user # 设置 jwt 签名加密时使用的秘钥
     user-ttl: 7200000 # 设置 jwt 过期时间
     user-token-name: token # 设置前端传递过来的令牌名称
+
+oauth:
+  client-id: 66c8440dc02bd7f35772233d6958d2f84648256419d294d51ca31981ed986f39
+  client-secret: a8c572db9a18e027d3a4c0156210788c9073818193954553de7bb09dcec5ba67

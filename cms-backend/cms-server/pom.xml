@@ -81,6 +81,12 @@
             <groupId>me.zhyd.oauth</groupId>
             <artifactId>JustAuth</artifactId>
         </dependency>
+        <!--        hutool 工具-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.16</version>
+        </dependency>
     </dependencies>
 
 

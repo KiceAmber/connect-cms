@@ -21,10 +21,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(UserLoginDTO userLoginDTO) {
-        String name = userLoginDTO.getName();
+        String passport = userLoginDTO.getPassport();
         String password = userLoginDTO.getPassword();
 
-        User user = userMapper.getByName(name);
+        User user = userMapper.getByName(passport);
         log.info("user info is " + user);
 
         if (user == null) {

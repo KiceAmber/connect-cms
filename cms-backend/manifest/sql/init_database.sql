@@ -2,146 +2,143 @@ create database `connect_cms`;
 
 use `connect_cms`;
 
--- -----------------------
--- module of administrator
--- -----------------------
-
-create table `cms_admin`
+-- 创建角色表
+CREATE TABLE `roles`
 (
-    `id`       int         not null auto_increment comment '管理员ID',
-    `name`     varchar(64) not null comment '管理员名称，全局唯一',
-    `password` varchar(64) not null comment '管理员登录密码',
-    `email`    varchar(64) not null comment '管理员联系邮箱',
-    primary key (`id`),
-    unique index (`name`)
+    `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '角色ID',
+    `name`        VARCHAR(50) NOT NULL UNIQUE COMMENT '角色名称',
+    `description` TEXT COMMENT '角色描述',
+    `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 );
 
-create table `cms_role`
+-- 创建资源表
+CREATE TABLE `resources`
 (
-    `id`         int         not null auto_increment comment '角色ID',
-    `name`       varchar(64) not null comment '角色名称',
-    `created_at` timestamp   not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp   not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp            default null comment '删除时间',
-    primary key (`id`)
+    `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `name`        VARCHAR(50) NOT NULL UNIQUE COMMENT '资源名称',
+    `description` TEXT COMMENT '资源描述',
+    `path`        VARCHAR(64) COMMENT '资源路径',
+    `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 );
 
-create table `cms_permission`
+-- 角色资源关联表
+CREATE TABLE `role_resources`
 (
-    `id`         int         not null auto_increment comment '权限ID',
-    `name`       varchar(64) not null comment '权限名称',
-    `url`        varchar(64) not null comment '权限路径',
-    `created_at` timestamp   not null default current_timestamp comment '创建时间',
-    `updated_at` timestamp   not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at` timestamp            default null comment '删除时间',
-    primary key (`id`)
+    `id`          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `role_id`     INT UNSIGNED,
+    `resource_id` INT UNSIGNED
 );
 
--- one admin can have many roles
--- one roles can have many permissions
--- one permission can be given to many roles
-
-create table `cms_admin_role`
+-- 用户表
+CREATE TABLE `users`
 (
-    `id`            int       not null auto_increment comment '管理员角色ID',
-    `role_id`       int       not null comment '管理员ID',
-    `permission_id` int       not null comment '角色ID',
-    `created_at`    timestamp not null default current_timestamp comment '创建时间',
-    `updated_at`    timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at`    timestamp          default null comment '删除时间',
-    primary key (`id`)
+    `id`         INT AUTO_INCREMENT COMMENT '用户ID',
+    `passport`   VARCHAR(64)  NOT NULL UNIQUE COMMENT '用户账号',
+    `nickname`   VARCHAR(50)  NOT NULL COMMENT '用户昵称',
+    `password`   VARCHAR(100) NOT NULL COMMENT '用户密码',
+    `email`      VARCHAR(100) NOT NULL UNIQUE COMMENT '电子邮件',
+    `avatar`     VARCHAR(128) NOT NULL COMMENT '用户头像',
+    `role_id`    INT          NOT NULL COMMENT '角色ID 用户只能赋予一个角色',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
 );
 
-create table `cms_role_permission`
+-- 内容分类表
+CREATE TABLE `categories`
 (
-    `id`            int       not null auto_increment comment '角色权限ID',
-    `role_id`       int       not null comment '角色ID',
-    `permission_id` int       not null comment '权限ID',
-    `created_at`    timestamp not null default current_timestamp comment '创建时间',
-    `updated_at`    timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    `deleted_at`    timestamp          default null comment '删除时间',
-    primary key (`id`)
+    `id`          INT AUTO_INCREMENT COMMENT '分类ID',
+    `parent_id`   INT COMMENT '父分类ID',
+    `name`        VARCHAR(100) NOT NULL UNIQUE COMMENT '分类名称',
+    `description` TEXT COMMENT '分类描述',
+    `slug`        VARCHAR(64) COMMENT '分类别名 用于路径显示',
+    `cover`       VARCHAR(128) COMMENT '分类封面',
+    PRIMARY KEY (`id`)
 );
 
--- --------------------
--- module of community
--- --------------------
-
-create table `cms_user`
+-- 内容标签表
+CREATE TABLE `tags`
 (
-    `id`            int          not null auto_increment comment '用户ID',
-    `name`          varchar(64)  not null comment '用户名称',
-    `password`      varchar(128) not null comment '用户密码',
-    `avatar`        varchar(128) not null comment '用户头像',
-    `signature`     varchar(256) not null comment '用户个人签名',
-    `email`         varchar(128) not null comment '用户邮箱',
-    `article_count` int          not null default 0 comment '用户发布的文章数量',
-    `liked_count`   int          not null default 0 comment '用户被点赞数量',
-    `create_time`   timestamp    not null default current_timestamp comment '用户创建时间',
-    primary key (`id`),
-    unique index (`name`)
+    `id`          INT AUTO_INCREMENT COMMENT '标签ID',
+    `name`        VARCHAR(100) NOT NULL UNIQUE COMMENT '标签名称',
+    `description` TEXT COMMENT '标签描述',
+    PRIMARY KEY (`id`)
 );
 
-create table `cms_article`
+-- 内容表
+CREATE TABLE `posts`
 (
-    `id`            int          not null auto_increment comment '文章ID',
-    `author_id`     int          not null comment '文章作者ID',
-    `community_id`  int          not null comment '文章所在社区ID',
-    `title`         varchar(64)  not null comment '文章标题',
-    `cover`         varchar(128) not null comment '文章封面',
-    `content`       text         not null comment '文章正文',
-    `like_count`    int          not null default 0 comment '文章点赞数量',
-    `comment_count` int          not null default 0 comment '文章评论数量',
-    `heat`          int          not null default 0 comment '文章热度 热度=点赞+评论+浏览量',
-    `view_count`    int          not null default 0 comment '文章浏览量',
-    `status`        tinyint      not null default 0 comment '文章状态 0-草稿 1-审核中 2-发布失败 3-发布成功',
-    `create_time`   timestamp    not null default current_timestamp comment '发布时间',
-    `update_time`   timestamp    not null default current_timestamp on update current_timestamp comment '最后修改时间',
-    primary key (`id`)
+    `id`            INT AUTO_INCREMENT COMMENT '内容ID',
+    `type`          TINYINT COMMENT '内容类型 1-文章 2-页面',
+    `title`         VARCHAR(255) NOT NULL COMMENT '标题',
+    `cover`         VARCHAR(128) NOT NULL COMMENT '封面',
+    `url`           VARCHAR(128) NOT NULL COMMENT '路径',
+    `content`       TEXT         NOT NULL COMMENT '内容',
+    `summary`       VARCHAR(64) COMMENT '文章摘要',
+    `user_id`       INT          NOT NULL COMMENT '作者ID',
+    `category_id`   INT COMMENT '分类ID',
+    `comment_count` INT COMMENT '评论数量',
+    `view_count`    INT COMMENT '访问量',
+    `is_top`        TINYINT COMMENT '是否置顶',
+    `slug`          VARCHAR(64) COMMENT '路径别名',
+    `status`        TINYINT COMMENT '状态 0-未发布 1-已发布 2-位于回收站',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
 );
 
-create table `cms_tag`
+-- 内容标签关联表
+CREATE TABLE `post_tags`
 (
-    `id`          int          not null auto_increment comment '标签ID',
-    `name`        varchar(64)  not null comment '标签名称',
-    `description` varchar(255) not null default '' comment '标签概述',
-    `create_time` timestamp    not null default current_timestamp comment '标签创建时间',
-    `created_by`  int          not null comment '被哪个管理员创建',
-    primary key (`id`)
+    `post_id` INT COMMENT '内容ID',
+    `tag_id`  INT COMMENT '标签ID',
+    PRIMARY KEY (`post_id`, `tag_id`)
 );
 
-create table `cms_article_tag`
+-- 评论表
+CREATE TABLE `comments`
 (
-    `article_id` int not null comment '文章ID',
-    `tag_id`     int not null comment '标签ID',
-    primary key (`article_id`, `tag_id`)
+    `id`          INT AUTO_INCREMENT COMMENT '评论ID',
+    `parent_id`   INT COMMENT '评论父ID',
+    `post_id`     INT  NOT NULL COMMENT '评论的内容ID',
+    `author_id`   INT COMMENT '评论者ID',
+    `author_name` VARCHAR(128) COMMENT '评论者的名称',
+    `author_url`  VARCHAR(128) COMMENT '评论的URL',
+    `content`     TEXT NOT NULL COMMENT '评论内容',
+    `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
 );
 
-create table `cms_community`
+-- 附件表
+CREATE TABLE `attachments`
 (
-    `id`            int          not null auto_increment comment '社区ID',
-    `name`          varchar(128) not null comment '社区名称',
-    `description`   varchar(128) not null default '' comment '社区概述',
-    `article_count` int          not null default 0 comment '社区文章数量',
-    `user_count`    int          not null default 0 comment '社区参与用户数量',
-    `created_by`    int          not null comment '社区被哪个管理员创建的'
+    `id`         INT AUTO_INCREMENT NOT NULL COMMENT '附件ID',
+    `author_id`  INT COMMENT '上传者ID',
+    `type`       TINYINT COMMENT '附件类型 1-图片 2-视频 3-其他',
+    `name`       VARCHAR(64) COMMENT '附件名称',
+    `url`        VARCHAR(128) COMMENT '附件的访问路径',
+    `size`       BIGINT COMMENT '文件大小',
+    `ext`        VARCHAR(32) COMMENT '文件扩展名',
+    `strategy`   TINYINT COMMENT '附件存储策略 0-本地存储 1-OSS存储',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
 );
 
-create table `cms_like`
+-- 菜单表
+CREATE TABLE `menus`
 (
-    `user_id`    int not null comment '点赞用户ID',
-    `article_id` int not null comment '点赞的文章ID',
-    primary key (`user_id`, `article_id`)
+    `id`        INT AUTO_INCREMENT NOT NULL COMMENT '菜单ID',
+    `parent_id` INT COMMENT '父级ID',
+    `sort`      INT COMMENT '导航上菜单的排序',
+    `url`       VARCHAR(64) COMMENT '菜单所指向的URL',
+    `title`     VARCHAR(64) COMMENT '菜单标题',
+    `name`      VARCHAR(64) COMMENT '菜单名称',
+    `icon`      VARCHAR(64) COMMENT '菜单图标',
+    PRIMARY KEY (`id`)
 );
 
-create table `cms_comment`
+-- 站点设置表
+CREATE TABLE `options`
 (
-    `id`           int           not null auto_increment comment '评论ID',
-    `parent_id`    int           not null default 0 comment '父评论ID, 无父评论则为 0',
-    `user_id`      int           not null comment '评论用户',
-    `article_id`   int           not null comment '评论的文章ID',
-    `content`      varchar(1024) not null comment '评论内容',
-    `comment_time` timestamp     not null default current_timestamp comment '评论时间',
-    primary key (`id`)
+    `option_key`   VARCHAR(128) COMMENT '选项的key 如博客标题',
+    `option_value` VARCHAR(128) COMMENT '选项的值 如博客标题是什么',
+    `type`         TINYINT COMMENT '内部选项为0 自定义的选项为1'
 );
-

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class UserLoginDTO implements Serializable {
 
     @ApiModelProperty("用户账号名称")
-    private String name;
+    private String passport;
 
     @ApiModelProperty("用户密码")
     private String password;
