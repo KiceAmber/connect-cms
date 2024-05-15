@@ -20,7 +20,6 @@ import java.io.IOException;
 @RequestMapping("/api/oauth")
 @Api(tags = "第三方登录接口")
 public class OAuthController {
-
     @Autowired
     private OAuthProperties oAuthProperties;
 

@@ -24,7 +24,8 @@
     </modules>
 
     <properties>
-        <mybatis.spring>2.2.0</mybatis.spring>
+        <!--        <mybatis.spring>2.2.0</mybatis.spring>-->
+        <mybatis.plus.version>3.4.1</mybatis.plus.version>
         <lombok>1.18.20</lombok>
         <fastjson>1.2.76</fastjson>
         <knife4j>3.0.2</knife4j>
@@ -37,9 +38,15 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis.spring}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis.plus.version}</version> <!-- 使用最新版本 -->
             </dependency>
 
             <dependency>
