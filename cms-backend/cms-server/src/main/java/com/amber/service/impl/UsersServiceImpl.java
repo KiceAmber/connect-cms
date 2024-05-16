@@ -8,6 +8,7 @@ import com.amber.dto.users.UsersLoginDTO;
 import com.amber.entity.Users;
 import com.amber.exception.PasswordErrorException;
 import com.amber.service.UsersService;
+import com.amber.vo.users.CreateUsersVO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.security.auth.login.AccountNotFoundException;
+import java.time.LocalDateTime;
 
 /**
  * (Users)表服务实现类
@@ -56,22 +58,21 @@ public class UsersServiceImpl extends ServiceImpl<UsersDao, Users> implements Us
     }
 
     @Override
-    public Boolean createUser(CreateUsersDTO createUsersDTO) {
-        // 创建用户䣌逻辑
-        Users users = null;
-        if (createUsersDTO != null) {
-            users = Users.builder().
-                    passport(createUsersDTO.getPassport()).
-                    nickname(createUsersDTO.getNickname()).
-                    password(DigestUtils.md5DigestAsHex(createUsersDTO.getPassword().getBytes())).
-                    email(createUsersDTO.getEmail()).
-                    avatar(FieldConstant.DEFAULT_AVATAR).
-                    roleId(createUsersDTO.getRoleId()).
-                    build();
-            return usersDao.insertOneRecord(users);
-        } else {
-            return false;
-        }
+    public CreateUsersVO createUser(CreateUsersDTO createUsersDTO) {
+        // 创建用户
+        Users users = Users.builder().
+                passport(createUsersDTO.getPassport()).
+                nickname(createUsersDTO.getNickname()).
+                password(DigestUtils.md5DigestAsHex(createUsersDTO.getPassword().getBytes())).
+                email(createUsersDTO.getEmail()).
+                avatar(FieldConstant.DEFAULT_AVATAR).
+                roleId(createUsersDTO.getRoleId()).
+                createTime(LocalDateTime.now()).
+                build();
+
+        usersDao.insertOneRecord(users);
+
+        return null;
     }
 }
 

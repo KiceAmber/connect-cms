@@ -9,6 +9,7 @@ import com.amber.properties.JwtProperties;
 import com.amber.result.Result;
 import com.amber.service.UsersService;
 import com.amber.utils.JwtUtil;
+import com.amber.vo.users.CreateUsersVO;
 import com.amber.vo.users.UsersLoginVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
@@ -93,7 +94,7 @@ public class UsersController extends ApiController {
 
     // 创建新的用户
     @PostMapping
-    public Result<?> insert(@RequestBody CreateUsersDTO createUsersDTO) {
+    public Result<CreateUsersVO> insert(@RequestBody CreateUsersDTO createUsersDTO) {
         return Result.success(usersService.createUser(createUsersDTO));
     }
 

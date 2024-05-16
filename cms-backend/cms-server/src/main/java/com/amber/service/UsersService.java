@@ -3,6 +3,7 @@ package com.amber.service;
 import com.amber.dto.users.CreateUsersDTO;
 import com.amber.dto.users.UsersLoginDTO;
 import com.amber.entity.Users;
+import com.amber.vo.users.CreateUsersVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -15,6 +16,6 @@ public interface UsersService extends IService<Users> {
 
     Users login(UsersLoginDTO usersLoginDTO);
 
-    Boolean createUser(CreateUsersDTO createUsersDTO);
+    CreateUsersVO createUser(CreateUsersDTO createUsersDTO);
 }
 
