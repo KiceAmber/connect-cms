@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HelloWorld from "../components/HelloWorld.vue";
 
 const routes = [
   {
-    path: "/console",
-    component: HelloWorld,
+    path: "/",
+    redirect: "/login",
+  },
+  {
+    path: "/login",
+    component: () => import("../views/Login/index.vue"),
   },
 ];
 
