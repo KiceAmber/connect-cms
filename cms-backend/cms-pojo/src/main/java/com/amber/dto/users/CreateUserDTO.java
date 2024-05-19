@@ -1,11 +1,15 @@
 package com.amber.dto.users;
 
-import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@ApiModel(description = "创建用户数据模型")
-public class CreateUsersDTO {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateUserDTO {
     private String passport;
     private String nickname;
     private String password;

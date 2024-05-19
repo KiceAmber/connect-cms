@@ -1,7 +1,10 @@
 package com.amber.controller;
 
 
+import com.amber.dto.categories.CreateCategoryDTO;
+import com.amber.dto.categories.DeleteCategoriesDTO;
 import com.amber.entity.Categories;
+import com.amber.result.Result;
 import com.amber.service.CategoriesService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
@@ -13,18 +16,10 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * (Categories)表控制层
- *
- * @author makejava
- * @since 2024-05-12 20:20:53
- */
 @RestController
 @RequestMapping("/api/console/categories")
 public class CategoriesController extends ApiController {
-    /**
-     * 服务对象
-     */
+
     @Resource
     private CategoriesService categoriesService;
 
@@ -51,15 +46,11 @@ public class CategoriesController extends ApiController {
         return success(this.categoriesService.getById(id));
     }
 
-    /**
-     * 新增数据
-     *
-     * @param categories 实体对象
-     * @return 新增结果
-     */
+    // 插入一条数据
     @PostMapping
-    public R insert(@RequestBody Categories categories) {
-        return success(this.categoriesService.save(categories));
+    public Result<String> insert(@RequestBody CreateCategoryDTO createCategoryDTO) {
+        categoriesService.createCategory(createCategoryDTO);
+        return Result.success();
     }
 
     /**
@@ -73,15 +64,12 @@ public class CategoriesController extends ApiController {
         return success(this.categoriesService.updateById(categories));
     }
 
-    /**
-     * 删除数据
-     *
-     * @param idList 主键结合
-     * @return 删除结果
-     */
+    // 删除多条数据
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.categoriesService.removeByIds(idList));
+    public Result<String> delete(@RequestBody DeleteCategoriesDTO deleteCategoriesDTO) {
+        List<Integer> idList = deleteCategoriesDTO.getIdList();
+        categoriesService.removeByIds(idList);
+        return Result.success();
     }
 }
 

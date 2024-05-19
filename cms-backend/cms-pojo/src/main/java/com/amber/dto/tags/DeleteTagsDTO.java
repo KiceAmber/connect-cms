@@ -2,14 +2,19 @@ package com.amber.dto.tags;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-@ApiModel(description = "删除标签数据模型")
-public class DeleteTagsDTO {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DeleteTagsDTO implements Serializable {
     @JsonProperty("idList")
     private List<Integer> idList;
 }

@@ -1,11 +1,14 @@
 package com.amber.service.impl;
 
 import com.amber.dao.TagsDao;
-import com.amber.dto.tags.CreateTagsDTO;
+import com.amber.dto.tags.CreateTagDTO;
+import com.amber.dto.tags.TagsPageQueryDTO;
 import com.amber.entity.Tags;
+import com.amber.result.PageResult;
 import com.amber.service.TagsService;
-import com.amber.vo.tags.CreateTagsVO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,17 +27,21 @@ public class TagsServiceImpl extends ServiceImpl<TagsDao, Tags> implements TagsS
     private TagsDao tagsDao;
 
     @Override
-    public CreateTagsVO createTag(CreateTagsDTO createTagsDTO) {
-        String name = createTagsDTO.getName();
-        String description = createTagsDTO.getDescription();
-
+    public void createTag(CreateTagDTO createTagDTO) {
         Tags tags = Tags.builder().
-                name(name).
-                description(description).
+                name(createTagDTO.getName()).
+                description(createTagDTO.getDescription()).
                 createTime(LocalDateTime.now()).
                 build();
-        tagsDao.insertOne(tags);
-        return null;
+        tagsDao.insertOneRecord(tags);
     }
+
+    @Override
+    public PageResult pageQuery(TagsPageQueryDTO tagsPageQueryDTO) {
+        PageHelper.startPage(tagsPageQueryDTO.getPage(), tagsPageQueryDTO.getSize());
+        Page<Tags> page = tagsDao.pageQuery(tagsPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
 }
 

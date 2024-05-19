@@ -1,87 +1,61 @@
 package com.amber.controller;
 
 
+import com.amber.dto.menus.*;
 import com.amber.entity.Menus;
+import com.amber.result.PageResult;
+import com.amber.result.Result;
 import com.amber.service.MenusService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.List;
 
-/**
- * (Menus)表控制层
- *
- * @author makejava
- * @since 2024-05-12 20:20:53
- */
 @RestController
 @RequestMapping("/api/console/menus")
+@Slf4j
 public class MenusController extends ApiController {
-    /**
-     * 服务对象
-     */
     @Resource
     private MenusService menusService;
 
-    /**
-     * 分页查询所有数据
-     *
-     * @param page  分页对象
-     * @param menus 查询实体
-     * @return 所有数据
-     */
-    @GetMapping
-    public R selectAll(Page<Menus> page, Menus menus) {
-        return success(this.menusService.page(page, new QueryWrapper<>(menus)));
+    // 分页查询所有数据
+    @GetMapping("/list")
+    public Result<PageResult> selectAll(@RequestBody MenusPageQueryDTO menusPageQueryDTO) {
+        PageResult pageResult = menusService.pageQuery(menusPageQueryDTO);
+        return Result.success(pageResult);
     }
 
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.menusService.getById(id));
+    // 通过主键查询单条数据
+    @GetMapping("/one")
+    public Result<Menus> selectOne(@RequestBody SelectOneMenuDTO selectOneMenuDTO) {
+        return Result.success(this.menusService.getById(selectOneMenuDTO.getId()));
     }
 
-    /**
-     * 新增数据
-     *
-     * @param menus 实体对象
-     * @return 新增结果
-     */
+    // 新增菜单
     @PostMapping
-    public R insert(@RequestBody Menus menus) {
-        return success(this.menusService.save(menus));
+    public Result<String> insert(@RequestBody CreateMenuDTO createMenuDTO) {
+        this.menusService.createMenu(createMenuDTO);
+        return Result.success();
     }
 
-    /**
-     * 修改数据
-     *
-     * @param menus 实体对象
-     * @return 修改结果
-     */
+    // 修改数据
     @PutMapping
-    public R update(@RequestBody Menus menus) {
-        return success(this.menusService.updateById(menus));
+    public Result<String> update(@RequestBody UpdateMenuDTO updateMenuDTO) {
+        Menus menus = new Menus();
+        BeanUtils.copyProperties(updateMenuDTO, menus);
+        menusService.updateById(menus);
+        return Result.success();
     }
 
-    /**
-     * 删除数据
-     *
-     * @param idList 主键结合
-     * @return 删除结果
-     */
+    // 删除菜单
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.menusService.removeByIds(idList));
+    public Result<String> delete(@RequestBody DeleteMenusDTO deleteMenusDTO) {
+        List<Integer> idList = deleteMenusDTO.getIdList();
+        menusService.removeByIds(idList);
+        return Result.success();
     }
 }
 

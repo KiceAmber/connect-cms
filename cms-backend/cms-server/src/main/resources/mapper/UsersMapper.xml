@@ -2,34 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.amber.dao.UsersDao">
 
-    <!--    <select id="selectAll" resultType="com.example.demo.model.YourModel">-->
-    <!--        SELECT *-->
-    <!--        FROM your_table-->
-    <!--    </select>-->
-    <!--    -->
-    <!--    <select id="selectById" parameterType="int" resultType="com.example.demo.model.YourModel">-->
-    <!--        SELECT *-->
-    <!--        FROM your_table-->
-    <!--        WHERE id = #{id}-->
-    <!--    </select>-->
-
-    <!--    插入用户数据-->
     <insert id="insertOneRecord" parameterType="com.amber.entity.Users">
         INSERT INTO connect_cms.users (passport, nickname, password, email, avatar, role_id, create_time)
         VALUES (#{passport}, #{nickname}, #{password}, #{email}, #{avatar}, #{roleId}, #{createTime})
     </insert>
 
-    <!--    <update id="updateById" parameterType="com.example.demo.model.YourModel">-->
-    <!--        UPDATE your_table-->
-    <!--        SET column1 = #{column1},-->
-    <!--            column2 = #{column2}-->
-    <!--        WHERE id = #{id}-->
-    <!--    </update>-->
-    <!--    -->
-    <!--    <delete id="deleteById" parameterType="int">-->
-    <!--        DELETE-->
-    <!--        FROM your_table-->
-    <!--        WHERE id = #{id}-->
-    <!--    </delete>-->
 
+    <select id="pageQuery" resultType="com.amber.entity.Users">
+        select *
+        from connect_cms.users
+        order by create_time desc
+    </select>
 </mapper>

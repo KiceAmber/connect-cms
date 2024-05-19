@@ -1,87 +1,60 @@
 package com.amber.controller;
 
 
+import com.amber.dto.roles.*;
 import com.amber.entity.Roles;
+import com.amber.result.PageResult;
+import com.amber.result.Result;
 import com.amber.service.RolesService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.List;
 
-/**
- * (Roles)表控制层
- *
- * @author makejava
- * @since 2024-05-12 20:20:54
- */
 @RestController
 @RequestMapping("/api/console/roles")
 public class RolesController extends ApiController {
-    /**
-     * 服务对象
-     */
+
     @Resource
     private RolesService rolesService;
 
-    /**
-     * 分页查询所有数据
-     *
-     * @param page  分页对象
-     * @param roles 查询实体
-     * @return 所有数据
-     */
-    @GetMapping
-    public R selectAll(Page<Roles> page, Roles roles) {
-        return success(this.rolesService.page(page, new QueryWrapper<>(roles)));
+    // 分页查询所有数据
+    @GetMapping("/list")
+    public Result<PageResult> selectAll(@RequestBody RolesPageQueryDTO rolesPageQueryDTO) {
+        PageResult pageResult = rolesService.pageQuery(rolesPageQueryDTO);
+        return Result.success(pageResult);
     }
 
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.rolesService.getById(id));
+    // 查询单条数据
+    @GetMapping("/one")
+    public Result<Roles> selectOne(@RequestBody SelectOneRoleDTO selectOneRoleDTO) {
+        return Result.success(rolesService.getById(selectOneRoleDTO.getId()));
     }
 
-    /**
-     * 新增数据
-     *
-     * @param roles 实体对象
-     * @return 新增结果
-     */
+    // 新增数据
     @PostMapping
-    public R insert(@RequestBody Roles roles) {
-        return success(this.rolesService.save(roles));
+    public Result<String> insert(@RequestBody CreateRoleDTO createRoleDTO) {
+        this.rolesService.createRole(createRoleDTO);
+        return Result.success();
     }
 
-    /**
-     * 修改数据
-     *
-     * @param roles 实体对象
-     * @return 修改结果
-     */
+    // 修改数据
     @PutMapping
-    public R update(@RequestBody Roles roles) {
-        return success(this.rolesService.updateById(roles));
+    public Result<String> update(@RequestBody UpdateRoleDTO updateRoleDTO) {
+        Roles roles = new Roles();
+        BeanUtils.copyProperties(updateRoleDTO, roles);
+        rolesService.updateById(roles);
+        return Result.success();
     }
 
-    /**
-     * 删除数据
-     *
-     * @param idList 主键结合
-     * @return 删除结果
-     */
+    // 删除数据
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.rolesService.removeByIds(idList));
+    public Result<String> delete(@RequestBody DeleteRolesDTO deleteRolesDTO) {
+        List<Integer> idList = deleteRolesDTO.getIdList();
+        rolesService.removeByIds(idList);
+        return Result.success();
     }
 }
 

@@ -2,27 +2,22 @@ package com.amber.controller;
 
 
 import com.amber.constant.JwtClaimsConstant;
-import com.amber.dto.users.CreateUsersDTO;
-import com.amber.dto.users.UsersLoginDTO;
+import com.amber.dto.users.*;
 import com.amber.entity.Users;
 import com.amber.properties.JwtProperties;
+import com.amber.result.PageResult;
 import com.amber.result.Result;
 import com.amber.service.UsersService;
 import com.amber.utils.JwtUtil;
-import com.amber.vo.users.CreateUsersVO;
 import com.amber.vo.users.UsersLoginVO;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,11 +37,11 @@ public class UsersController extends ApiController {
     @Resource
     private UsersService usersService;
 
-    @Autowired
+    @Resource
     private JwtProperties jwtProperties;
 
+    // 用户登录
     @PostMapping("/login")
-    @ApiOperation("用户登录")
     public Result<UsersLoginVO> login(@RequestBody UsersLoginDTO userLoginDTO) {
         log.info("用户登录：{}", userLoginDTO);
 
@@ -69,55 +64,51 @@ public class UsersController extends ApiController {
         return Result.success(userLoginVO);
     }
 
-    /**
-     * 分页查询所有数据
-     *
-     * @param page  分页对象
-     * @param users 查询实体
-     * @return 所有数据
-     */
-    @GetMapping
-    public R selectAll(Page<Users> page, Users users) {
-        return success(this.usersService.page(page, new QueryWrapper<>(users)));
+    // 分页查询所有数据
+    @GetMapping("/list")
+    public Result<PageResult> selectAll(@RequestBody UsersPageQueryDTO usersPageQueryDTO) {
+        PageResult pageResult = usersService.pageQuery(usersPageQueryDTO);
+        return Result.success(pageResult);
     }
 
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.usersService.getById(id));
+    // 主键 id 查询单条数据
+    @GetMapping("/one")
+    public Result<Users> selectOne(@RequestBody SelectOneUserDTO selectOneUserDTO) {
+        return Result.success(usersService.getById(selectOneUserDTO.getId()));
     }
 
     // 创建新的用户
     @PostMapping
-    public Result<CreateUsersVO> insert(@RequestBody CreateUsersDTO createUsersDTO) {
-        return Result.success(usersService.createUser(createUsersDTO));
+    public Result<String> insert(@RequestBody CreateUserDTO createUserDTO) {
+        usersService.createUser(createUserDTO);
+        return Result.success();
     }
 
-    /**
-     * 修改数据
-     *
-     * @param users 实体对象
-     * @return 修改结果
-     */
-    @PutMapping
-    public R update(@RequestBody Users users) {
-        return success(this.usersService.updateById(users));
+    // 修改用户基本信息数据
+    @PutMapping("/info")
+    public Result<String> updateUserInfo(@RequestBody UpdateUserInfoDTO updateUserInfoDTO) {
+        Users users = new Users();
+        BeanUtils.copyProperties(updateUserInfoDTO, users);
+        usersService.updateById(users);
+        return Result.success();
     }
 
-    /**
-     * 删除数据
-     *
-     * @param idList 主键结合
-     * @return 删除结果
-     */
+    // 修改用户密码
+    @PutMapping("/password")
+    public Result<String> updateUserPassword(@RequestBody UpdateUserPasswordDTO updateUserPasswordDTO) {
+        Users users = new Users();
+        BeanUtils.copyProperties(updateUserPasswordDTO, users);
+        users.setPassword(DigestUtils.md5DigestAsHex(updateUserPasswordDTO.getPassword().getBytes()));
+        usersService.updateById(users);
+        return Result.success();
+    }
+
+    // 删除多条 tags 数据
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.usersService.removeByIds(idList));
+    public Result<String> delete(@RequestBody DeleteUsersDTO deleteUsersDTO) {
+        List<Integer> idList = deleteUsersDTO.getIdList();
+        usersService.removeByIds(idList);
+        return Result.success();
     }
 }
 

@@ -1,15 +1,14 @@
 package com.amber.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.amber.dto.roles.RolesPageQueryDTO;
 import com.amber.entity.Roles;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.pagehelper.Page;
 
-/**
- * (Roles)表数据库访问层
- *
- * @author makejava
- * @since 2024-05-12 20:20:54
- */
 public interface RolesDao extends BaseMapper<Roles> {
 
+    void insertOneRecord(Roles roles);
+
+    Page<Roles> pageQuery(RolesPageQueryDTO rolesPageQueryDTO);
 }
 

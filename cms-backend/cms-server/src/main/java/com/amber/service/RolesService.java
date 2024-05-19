@@ -1,15 +1,15 @@
 package com.amber.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.amber.dto.roles.CreateRoleDTO;
+import com.amber.dto.roles.RolesPageQueryDTO;
 import com.amber.entity.Roles;
+import com.amber.result.PageResult;
+import com.baomidou.mybatisplus.extension.service.IService;
 
-/**
- * (Roles)表服务接口
- *
- * @author makejava
- * @since 2024-05-12 20:20:54
- */
 public interface RolesService extends IService<Roles> {
 
+    void createRole(CreateRoleDTO createRoleDTO);
+
+    PageResult pageQuery(RolesPageQueryDTO rolesPageQueryDTO);
 }
 

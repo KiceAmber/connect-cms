@@ -1,15 +1,16 @@
 package com.amber.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.amber.dto.menus.CreateMenuDTO;
+import com.amber.dto.menus.MenusPageQueryDTO;
 import com.amber.entity.Menus;
+import com.amber.result.PageResult;
+import com.baomidou.mybatisplus.extension.service.IService;
 
-/**
- * (Menus)表服务接口
- *
- * @author makejava
- * @since 2024-05-12 20:20:53
- */
+
 public interface MenusService extends IService<Menus> {
 
+    void createMenu(CreateMenuDTO createMenusDTO);
+
+    PageResult pageQuery(MenusPageQueryDTO menusPageQueryDTO);
 }
 

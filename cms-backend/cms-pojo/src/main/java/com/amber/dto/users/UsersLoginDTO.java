@@ -1,18 +1,18 @@
 package com.amber.dto.users;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
-@ApiModel(description = "用户登录时传递的数据模型")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UsersLoginDTO implements Serializable {
-
-    @ApiModelProperty("用户账号名称")
     private String passport;
-
-    @ApiModelProperty("用户密码")
     private String password;
+    private String target;
 }

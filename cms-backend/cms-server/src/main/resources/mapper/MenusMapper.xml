@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amber.dao.MenusDao">
+
+
+    <!--    插入菜单数据-->
+    <insert id="insertOneRecord" parameterType="com.amber.entity.Menus">
+        INSERT INTO connect_cms.menus (parent_id, url, title, name, icon, create_time)
+        VALUES (#{parentId}, #{url}, #{title}, #{name}, #{icon}, #{createTime})
+    </insert>
+
+    <select id="pageQuery" resultType="com.amber.entity.Menus">
+        select * from connect_cms.menus
+        <!--        <where>-->
+        <!--            <if test="name != null and name != ''">-->
+        <!--                and name like concat('%',#{name},'%')-->
+        <!--            </if>-->
+        <!--            <if test="type != null">-->
+        <!--                and type = #{type}-->
+        <!--            </if>-->
+        <!--        </where>-->
+        order by sort asc, create_time desc
+    </select>
+
+</mapper>

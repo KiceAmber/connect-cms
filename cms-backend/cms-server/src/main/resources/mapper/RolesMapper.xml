@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amber.dao.RolesDao">
+
+    <insert id="insertOneRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into connect_cms.roles (name, description, create_time)
+        VALUES (#{name}, #{description}, #{createTime})
+    </insert>
+
+    <select id="pageQuery" resultType="com.amber.entity.Roles">
+        select * from connect_cms.roles
+        <!--        <where>-->
+        <!--            <if test="name != null and name != ''">-->
+        <!--                and name like concat('%',#{name},'%')-->
+        <!--            </if>-->
+        <!--            <if test="type != null">-->
+        <!--                and type = #{type}-->
+        <!--            </if>-->
+        <!--        </where>-->
+        order by create_time desc
+    </select>
+
+</mapper>

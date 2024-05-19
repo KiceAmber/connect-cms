@@ -3,13 +3,16 @@ package com.amber.service.impl;
 import com.amber.constant.FieldConstant;
 import com.amber.constant.MessageConstant;
 import com.amber.dao.UsersDao;
-import com.amber.dto.users.CreateUsersDTO;
+import com.amber.dto.users.CreateUserDTO;
 import com.amber.dto.users.UsersLoginDTO;
+import com.amber.dto.users.UsersPageQueryDTO;
 import com.amber.entity.Users;
 import com.amber.exception.PasswordErrorException;
+import com.amber.result.PageResult;
 import com.amber.service.UsersService;
-import com.amber.vo.users.CreateUsersVO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -58,21 +61,26 @@ public class UsersServiceImpl extends ServiceImpl<UsersDao, Users> implements Us
     }
 
     @Override
-    public CreateUsersVO createUser(CreateUsersDTO createUsersDTO) {
+    public void createUser(CreateUserDTO createUserDTO) {
         // 创建用户
         Users users = Users.builder().
-                passport(createUsersDTO.getPassport()).
-                nickname(createUsersDTO.getNickname()).
-                password(DigestUtils.md5DigestAsHex(createUsersDTO.getPassword().getBytes())).
-                email(createUsersDTO.getEmail()).
+                passport(createUserDTO.getPassport()).
+                nickname(createUserDTO.getNickname()).
+                password(DigestUtils.md5DigestAsHex(createUserDTO.getPassword().getBytes())).
+                email(createUserDTO.getEmail()).
                 avatar(FieldConstant.DEFAULT_AVATAR).
-                roleId(createUsersDTO.getRoleId()).
+                roleId(createUserDTO.getRoleId()).
                 createTime(LocalDateTime.now()).
                 build();
 
         usersDao.insertOneRecord(users);
+    }
 
-        return null;
+    @Override
+    public PageResult pageQuery(UsersPageQueryDTO tagsPageQueryDTO) {
+        PageHelper.startPage(tagsPageQueryDTO.getPage(), tagsPageQueryDTO.getSize());
+        Page<Users> page = usersDao.pageQuery(tagsPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }
 
