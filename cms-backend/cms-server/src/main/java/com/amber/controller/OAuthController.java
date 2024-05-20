@@ -8,10 +8,10 @@ import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequestMapping("/api/oauth")
 @Api(tags = "第三方登录接口")
 public class OAuthController {
-    @Autowired
+    @Resource
     private OAuthProperties oAuthProperties;
 
     @RequestMapping("/render")

@@ -53,7 +53,7 @@ public class RolesController extends ApiController {
     @DeleteMapping
     public Result<String> delete(@RequestBody DeleteRolesDTO deleteRolesDTO) {
         List<Integer> idList = deleteRolesDTO.getIdList();
-        rolesService.removeByIds(idList);
+        rolesService.deleteRoleByIds(idList);
         return Result.success();
     }
 }

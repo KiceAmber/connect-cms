@@ -8,16 +8,17 @@
     </insert>
 
     <select id="pageQuery" resultType="com.amber.entity.Roles">
-        select * from connect_cms.roles
-        <!--        <where>-->
-        <!--            <if test="name != null and name != ''">-->
-        <!--                and name like concat('%',#{name},'%')-->
-        <!--            </if>-->
-        <!--            <if test="type != null">-->
-        <!--                and type = #{type}-->
-        <!--            </if>-->
-        <!--        </where>-->
+        select *
+        from connect_cms.roles
         order by create_time desc
     </select>
+
+    <delete id="deleteRoleByIds">
+        delete from connect_cms.roles
+        where id in
+        <foreach collection="idList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

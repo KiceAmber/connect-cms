@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service("rolesService")
 public class RolesServiceImpl extends ServiceImpl<RolesDao, Roles> implements RolesService {
@@ -53,6 +54,17 @@ public class RolesServiceImpl extends ServiceImpl<RolesDao, Roles> implements Ro
         PageHelper.startPage(rolesPageQueryDTO.getPage(), rolesPageQueryDTO.getSize());
         Page<Roles> page = rolesDao.pageQuery(rolesPageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoleByIds(List<Integer> idList) {
+
+        // 先删除 role 表的记录
+        rolesDao.deleteRoleByIds(idList);
+
+        // 删除 role_resources 表的记录
+        roleResourcesDao.deleteRoleResourcesByRoleIdList(idList);
     }
 }
 

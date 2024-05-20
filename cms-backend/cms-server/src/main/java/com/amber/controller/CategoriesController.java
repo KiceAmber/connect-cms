@@ -1,19 +1,16 @@
 package com.amber.controller;
 
 
-import com.amber.dto.categories.CreateCategoryDTO;
-import com.amber.dto.categories.DeleteCategoriesDTO;
+import com.amber.dto.categories.*;
 import com.amber.entity.Categories;
+import com.amber.result.PageResult;
 import com.amber.result.Result;
 import com.amber.service.CategoriesService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -23,27 +20,17 @@ public class CategoriesController extends ApiController {
     @Resource
     private CategoriesService categoriesService;
 
-    /**
-     * 分页查询所有数据
-     *
-     * @param page       分页对象
-     * @param categories 查询实体
-     * @return 所有数据
-     */
-    @GetMapping
-    public R selectAll(Page<Categories> page, Categories categories) {
-        return success(this.categoriesService.page(page, new QueryWrapper<>(categories)));
+    // 分页查询所有数据
+    @GetMapping("/list")
+    public Result<PageResult> selectAll(@RequestBody CategoriesPageQueryDTO categoriesPageQueryDTO) {
+        PageResult pageResult = categoriesService.pageQuery(categoriesPageQueryDTO);
+        return Result.success(pageResult);
     }
 
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.categoriesService.getById(id));
+    // 主键 id 查询单条数据
+    @GetMapping("/one")
+    public Result<Categories> selectOne(@RequestBody SelectOneCategoryDTO selectOneCategoryDTO) {
+        return Result.success(categoriesService.getById(selectOneCategoryDTO.getId()));
     }
 
     // 插入一条数据
@@ -53,15 +40,13 @@ public class CategoriesController extends ApiController {
         return Result.success();
     }
 
-    /**
-     * 修改数据
-     *
-     * @param categories 实体对象
-     * @return 修改结果
-     */
+    // 修改数据
     @PutMapping
-    public R update(@RequestBody Categories categories) {
-        return success(this.categoriesService.updateById(categories));
+    public Result<String> update(@RequestBody UpdateCategoryDTO updateCategoryDTO) {
+        Categories tags = new Categories();
+        BeanUtils.copyProperties(updateCategoryDTO, tags);
+        categoriesService.updateById(tags);
+        return Result.success();
     }
 
     // 删除多条数据

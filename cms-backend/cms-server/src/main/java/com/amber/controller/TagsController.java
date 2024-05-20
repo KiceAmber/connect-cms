@@ -39,14 +39,14 @@ public class TagsController extends ApiController {
         return Result.success(tagsService.getById(selectOneTagDTO.getId()));
     }
 
-    // 插入一条 tags 数据
+    // 插入一条数据
     @PostMapping
     public Result<String> insert(@RequestBody CreateTagDTO createTagDTO) {
         tagsService.createTag(createTagDTO);
         return Result.success();
     }
 
-    // 修改 Tag 数据
+    // 修改数据
     @PutMapping
     public Result<String> update(@RequestBody UpdateTagDTO updateTagDTO) {
         Tags tags = new Tags();
@@ -55,7 +55,7 @@ public class TagsController extends ApiController {
         return Result.success();
     }
 
-    // 删除多条 tags 数据
+    // 删除多条数据
     @DeleteMapping
     public Result<String> delete(@RequestBody DeleteTagsDTO deleteTagsDTO) {
         List<Integer> idList = deleteTagsDTO.getIdList();

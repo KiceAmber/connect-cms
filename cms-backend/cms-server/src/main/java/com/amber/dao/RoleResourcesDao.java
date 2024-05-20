@@ -1,7 +1,9 @@
 package com.amber.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amber.entity.RoleResources;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * (RoleResources)表数据库访问层
@@ -11,5 +13,6 @@ import com.amber.entity.RoleResources;
  */
 public interface RoleResourcesDao extends BaseMapper<RoleResources> {
 
+    void deleteRoleResourcesByRoleIdList(List<Integer> idList);
 }
 

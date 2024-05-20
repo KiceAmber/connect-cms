@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.amber.dao.ResourcesDao">
+
+
+    <insert id="insertOneRecord" parameterType="com.amber.entity.Resources">
+        INSERT INTO connect_cms.resources (name, description, path, create_time)
+        VALUES (#{name}, #{description}, #{path}, #{createTime})
+    </insert>
+
+    <select id="pageQuery" resultType="com.amber.entity.Resources">
+        select *
+        from connect_cms.resources
+        order by create_time desc
+    </select>
+
+</mapper>

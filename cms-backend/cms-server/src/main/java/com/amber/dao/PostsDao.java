@@ -1,7 +1,7 @@
 package com.amber.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amber.entity.Posts;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * (Posts)表数据库访问层
@@ -11,5 +11,6 @@ import com.amber.entity.Posts;
  */
 public interface PostsDao extends BaseMapper<Posts> {
 
+    void insertOneRecord(Posts posts);
 }
 
